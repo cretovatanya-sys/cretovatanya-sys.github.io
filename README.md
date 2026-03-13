@@ -1504,7 +1504,8 @@ Table notification_logs {
 }
 ```
 
-<img width="974" height="623" alt="image" src="https://github.com/user-attachments/assets/b1a7b8be-d1ed-43b2-afc5-38ec6bd3c481" />
+<img width="887" height="691" alt="image" src="https://github.com/user-attachments/assets/b2092d9e-3566-4791-85d6-84242dc3e25a" />
+
 
 ### API
 Модуль предоставляет REST API для взаимодействия с клиентскими приложениями и внешними сервисами.  
