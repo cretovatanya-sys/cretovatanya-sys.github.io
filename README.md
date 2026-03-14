@@ -1505,7 +1505,7 @@ Table notification_logs {
 ```
 
 <img width="887" height="691" alt="image" src="https://github.com/user-attachments/assets/b2092d9e-3566-4791-85d6-84242dc3e25a" />
-
+![ER-диаграмма](https://github.com/cretovatanya-sys/cretovatanya-sys.github.io/blob/main/ER-images-0.jpg)
 
 
 ### API
