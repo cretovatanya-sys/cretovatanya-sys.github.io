@@ -147,43 +147,56 @@
 - рейтингу
 
 #### UML 
-<img width="887" height="691" alt="image" src="UML.png" />
+<img width="887" height="691" alt="image" src="" />
 
 ```
 @startuml
-actor Клиент
-participant "UI (Пользовательский интерфейс)" as UI
-participant "Сервис заказов" as OrderService
-participant "Сервис склада" as InventoryService 
-participant "Сервис логистики" as LogisticsService
-participant "Сервис оплаты" as PaymentService
-database "База данных" as DB
 
-== Создание заказа ==
-Клиент -> UI : Выбирает товары и оформляет заказ
+actor Patient
+participant WebApp
+participant API
+participant ScheduleService
+participant AppointmentService
+participant Database
+participant NotificationService
 
-== Обработка заказа ==
-UI -> OrderService : Передает данные заказа
-OrderService -> DB : Сохраняет заказ
+Patient->>WebApp: Открывает страницу записи
+WebApp->>API: GET /doctors
+API->>Database: Получить список врачей
+Database-->>API: Список врачей
+API-->>WebApp: Список врачей
 
-== Проверка наличия товаров ==
-OrderService -> InventoryService : Запрос наличия товаров 
-InventoryService -> DB : Проверяет остатки
-InventoryService --> OrderService : Подтверждает наличие
+Patient->>WebApp: Выбирает врача и дату
+WebApp->>API: GET /doctors/{id}/slots
 
-== Планирование доставки ==
-OrderService -> LogisticsService : Запрос на доставку
-LogisticsService -> DB : Сохраняет маршрут
-LogisticsService -> PaymentService : Передает данные для оплаты
+API->>ScheduleService: Получить расписание
+ScheduleService->>Database: Запрос расписания
+Database-->>ScheduleService: Рабочие часы
 
-== Оплата заказа ==
-PaymentService -> DB : Фиксирует платеж
-PaymentService --> LogisticsService : Подтверждает оплату
+ScheduleService->>Database: Получить занятые слоты
+Database-->>ScheduleService: Список записей
 
-== Завершение заказа ==
-LogisticsService -> UI : Уведомляет об отправке 
-UI -> Клиент : Информирует о статусе доставки
+ScheduleService-->>API: Доступные слоты
+API-->>WebApp: Список слотов
+
+Patient->>WebApp: Выбирает слот
+WebApp->>API: POST /appointments
+
+API->>AppointmentService: Создать запись
+AppointmentService->>Database: Проверка слота
+Database-->>AppointmentService: Слот свободен
+
+AppointmentService->>Database: INSERT appointment
+Database-->>AppointmentService: OK
+
+AppointmentService->>NotificationService: Отправить уведомление
+NotificationService-->>Patient: SMS подтверждение
+
+AppointmentService-->>API: Запись создана
+API-->>WebApp: Успешный ответ
+WebApp-->>Patient: Подтверждение записи
 @enduml
+
 ```
 
   
