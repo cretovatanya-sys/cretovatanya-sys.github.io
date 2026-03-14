@@ -147,7 +147,7 @@
 - рейтингу
 
 #### UML 
-<img width="887" height="691" alt="image" src="" />
+<img width="887" height="691" alt="image" src="UML-0.png" />
 
 ```
 @startuml
