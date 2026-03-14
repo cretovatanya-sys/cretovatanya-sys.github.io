@@ -147,54 +147,64 @@
 - рейтингу
 
 #### UML 
-<img width="887" height="691" alt="image" src="UML-0.png" />
+<img width="887" height="691" alt="image" src="UML-1.png" />
 
 ```
 @startuml
 
-actor Patient
-participant WebApp
-participant API
-participant ScheduleService
-participant AppointmentService
-participant Database
-participant NotificationService
+actor Пациент
+participant Веб_приложение as WA
+participant API_шлюз as API
+participant Сервис_расписания as SS
+participant Сервис_записей as AS
+database База_данных as DB
+participant Сервис_уведомлений as NS
 
-Patient->>WebApp: Открывает страницу записи
-WebApp->>API: GET /doctors
-API->>Database: Получить список врачей
-Database-->>API: Список врачей
-API-->>WebApp: Список врачей
+== Открытие страницы записи ==
 
-Patient->>WebApp: Выбирает врача и дату
-WebApp->>API: GET /doctors/{id}/slots
+Пациент->>WA: Открывает страницу записи
+WA->>API: GET /doctors
+API->>DB: Получить список врачей
+DB-->>API: Список врачей
+API-->>WA: Список врачей
 
-API->>ScheduleService: Получить расписание
-ScheduleService->>Database: Запрос расписания
-Database-->>ScheduleService: Рабочие часы
+== Выбор врача и даты ==
 
-ScheduleService->>Database: Получить занятые слоты
-Database-->>ScheduleService: Список записей
+Пациент->>WA: Выбирает врача и дату
+WA->>API: GET /doctors/{id}/slots
 
-ScheduleService-->>API: Доступные слоты
-API-->>WebApp: Список слотов
+API->>SS: Получить расписание врача
+SS->>DB: Запрос расписания
+DB-->>SS: Рабочие часы
 
-Patient->>WebApp: Выбирает слот
-WebApp->>API: POST /appointments
+SS->>DB: Получить занятые слоты
+DB-->>SS: Список существующих записей
 
-API->>AppointmentService: Создать запись
-AppointmentService->>Database: Проверка слота
-Database-->>AppointmentService: Слот свободен
+SS-->>API: Доступные слоты
+API-->>WA: Список доступных слотов
 
-AppointmentService->>Database: INSERT appointment
-Database-->>AppointmentService: OK
+== Создание записи на приём ==
 
-AppointmentService->>NotificationService: Отправить уведомление
-NotificationService-->>Patient: SMS подтверждение
+Пациент->>WA: Выбирает слот
+WA->>API: POST /appointments
 
-AppointmentService-->>API: Запись создана
-API-->>WebApp: Успешный ответ
-WebApp-->>Patient: Подтверждение записи
+API->>AS: Создать запись
+AS->>DB: Проверка доступности слота
+DB-->>AS: Слот свободен
+
+AS->>DB: INSERT appointment
+DB-->>AS: OK
+
+== Отправка уведомления пациенту ==
+
+AS->>NS: Отправить уведомление
+NS-->>Пациент: SMS подтверждение записи
+
+== Завершение процесса ==
+
+AS-->>API: Запись успешно создана
+API-->>WA: Успешный ответ
+WA-->>Пациент: Подтверждение записи
 @enduml
 
 ```
