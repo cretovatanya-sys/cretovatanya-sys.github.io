@@ -1506,7 +1506,7 @@ Table notification_logs {
 
 <img width="887" height="691" alt="image" src="https://github.com/user-attachments/assets/b2092d9e-3566-4791-85d6-84242dc3e25a" />
 
-
+<img width="887" height="691" alt="image" src="ER-images-0.jpg" />
 
 ### API
 Модуль предоставляет REST API для взаимодействия с клиентскими приложениями и внешними сервисами.  
