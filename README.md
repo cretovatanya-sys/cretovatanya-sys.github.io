@@ -116,7 +116,7 @@
 Пациент должен иметь возможность:  
 - выбрать дату  
 - выбрать доступный временной слот  
-  
+
 **FR-4 Создание записи**  
 При подтверждении записи система должна:  
 - создать запись в системе  
@@ -144,7 +144,48 @@
 Пациент может фильтровать врачей по:  
 - специализации  
 - дате  
-- рейтингу  
+- рейтингу
+
+#### UML 
+<img width="887" height="691" alt="image" src="UML.png" />
+
+```
+@startuml
+actor Клиент
+participant "UI (Пользовательский интерфейс)" as UI
+participant "Сервис заказов" as OrderService
+participant "Сервис склада" as InventoryService 
+participant "Сервис логистики" as LogisticsService
+participant "Сервис оплаты" as PaymentService
+database "База данных" as DB
+
+== Создание заказа ==
+Клиент -> UI : Выбирает товары и оформляет заказ
+
+== Обработка заказа ==
+UI -> OrderService : Передает данные заказа
+OrderService -> DB : Сохраняет заказ
+
+== Проверка наличия товаров ==
+OrderService -> InventoryService : Запрос наличия товаров 
+InventoryService -> DB : Проверяет остатки
+InventoryService --> OrderService : Подтверждает наличие
+
+== Планирование доставки ==
+OrderService -> LogisticsService : Запрос на доставку
+LogisticsService -> DB : Сохраняет маршрут
+LogisticsService -> PaymentService : Передает данные для оплаты
+
+== Оплата заказа ==
+PaymentService -> DB : Фиксирует платеж
+PaymentService --> LogisticsService : Подтверждает оплату
+
+== Завершение заказа ==
+LogisticsService -> UI : Уведомляет об отправке 
+UI -> Клиент : Информирует о статусе доставки
+@enduml
+```
+
   
 ### 4. Бизнес-метрики
 #### 4.1 Ключевые показатели эффективности (KPI)
